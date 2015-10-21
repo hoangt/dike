@@ -14,14 +14,14 @@ First make sure that these packages are installed on your machine:
 3) (optional) numactl : Control NUMA policy for processes or shared memory (http://linux.die.net/man/8/numactl) 
 
 How to run:
+
 $ make
+
 $ make run
 
-Run the tests:
-$ export LD_LIBRARY_PATH="./lib"
-$ ./bin/[test_binary] [num_beats] [target_rate] [window_size]
 
-Develope Source Code:
+Developing Source Code:
+All files are in "src/" directory. 
 
 
 
