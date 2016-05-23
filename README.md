@@ -1,4 +1,4 @@
-# Dike - Greek goddess of justice and fair judgment
+
 Dike - Adaptive Fair Scheduler
 
 Project Description:
