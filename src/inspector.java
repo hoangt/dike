@@ -6,6 +6,8 @@ public class inspector {
 
 	public void inputLayout(String inputLayout) throws IOException {
 		File fin = new File("cores.layout");
+
+		
 		BufferedReader br = new BufferedReader(new FileReader(fin));
 		String line = null;
 		while ((line = br.readLine()) != null) {
@@ -20,7 +22,7 @@ public class inspector {
 				// System.out.println(inputLayout + " :: "+layoutName);
 				continue;
 			}
-
+			
 			parts = layoutStr.split(",");
 			for (int i = 0; i < parts.length; i++) {
 				if (parts[i].substring(0, 1).equals("*")) {
@@ -365,7 +367,7 @@ public class inspector {
 	public static Core[] cores;
 	public static Program[] progs;
 	// static int dimension = 40;
-	static int dimension = 40;
+	static int dimension = 8;
 	static int sampleSize = 0;
 	static int Time = 6000;
 	static long cycle = 0; // approximate value for number of cycles per second
@@ -401,6 +403,8 @@ public class inspector {
 		FileWriter coresspeedwriter = new FileWriter("CoresSpeed.csv");
 		FileWriter progsbwwriter = new FileWriter("ProgsBW.csv");
 
+		System.out.println(swapSize+" -- "+schedFreq);
+		
 		inspector.initialize(layout);
 
 		// TODO Remove TEST
@@ -449,7 +453,12 @@ public class inspector {
 			Thread.sleep(schedFreq);
 			boolean running = false;
 			for (int i = 0; i < dimension; i++) {
-				// System.out.println(perfArray[i].getValue());
+				//System.out.println(perfArray[i].getValue());
+				if (perfArray[i].getValue()==null){
+					System.out.println("Perf is not working, Scheduler is terminating...");
+					System.exit(0);
+				}
+				
 				if (!progs[i].finished) {
 					if (perfArray[i].getValue() != null) {
 						running = inspector.processPerf(i,
@@ -470,8 +479,9 @@ public class inspector {
 			if (inspector.checkAllFinished())
 				break;
 
+			
 			sp.schedule(t);
-
+			
 			System.out.print(" Time is " + t + " | ");
 
 			fairnessHistory[t % 20] = sp.getFairness();

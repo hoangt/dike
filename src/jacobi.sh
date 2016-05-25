@@ -1,3 +1,4 @@
+#!/bin/bash
 ###############################################################################
 #You need to change these params before running the script
 benchmarkAddr="/local/inspector/benchmark"
@@ -43,26 +44,28 @@ function storeLogs (){
 }
 
 ###############################################################################
+#Here you need to set the initial physical CPU bind for every running benchmark. 
+#e.g. You should change the --physcpubind value for each thread.
 
 benchmark[0]="jacobi0"
 benchmark[1]="jacobi1"
 benchmark[2]="jacobi2"
 benchmark[3]="jacobi3"
 
-cmd[0]="numactl --interleave=0 --physcpubind=0 $benchmarkAddr/jacobi0 >${benchmark[0]}.log &"
-cmd[1]="numactl --interleave=0 --physcpubind=1 $benchmarkAddr/jacobi1 >${benchmark[1]}.log &"
-cmd[2]="numactl --interleave=0 --physcpubind=2 $benchmarkAddr/jacobi2 >${benchmark[2]}.log &"
-cmd[3]="numactl --interleave=0 --physcpubind=3 $benchmarkAddr/jacobi3 >${benchmark[3]}.log &"
+cmd[0]="numactl --interleave=0 --physcpubind=0 ${benchmarkAddr}/jacobi0 >${benchmark[0]}.log &"
+cmd[1]="numactl --interleave=0 --physcpubind=1 ${benchmarkAddr}/jacobi1 >${benchmark[1]}.log &"
+cmd[2]="numactl --interleave=0 --physcpubind=2 ${benchmarkAddr}/jacobi2 >${benchmark[2]}.log &"
+cmd[3]="numactl --interleave=0 --physcpubind=3 ${benchmarkAddr}/jacobi3 >${benchmark[3]}.log &"
 
 benchmark[4]="jacobi4"
 benchmark[5]="jacobi5"
 benchmark[6]="jacobi6"
 benchmark[7]="jacobi7"
 
-cmd[4]="numactl --interleave=0 --physcpubind=10 $benchmarkAddr/jacobi4 >${benchmark[4]}.log &"
-cmd[5]="numactl --interleave=0 --physcpubind=11 $benchmarkAddr/jacobi5 >${benchmark[5]}.log &"
-cmd[6]="numactl --interleave=0 --physcpubind=12 $benchmarkAddr/jacobi6 >${benchmark[6]}.log &"
-cmd[7]="numactl --interleave=0 --physcpubind=13 $benchmarkAddr/jacobi7 >${benchmark[7]}.log &"
+cmd[4]="numactl --interleave=0 --physcpubind=4 ${benchmarkAddr}/jacobi4 >${benchmark[4]}.log &"
+cmd[5]="numactl --interleave=0 --physcpubind=5 ${benchmarkAddr}/jacobi5 >${benchmark[5]}.log &"
+cmd[6]="numactl --interleave=0 --physcpubind=6 ${benchmarkAddr}/jacobi6 >${benchmark[6]}.log &"
+cmd[7]="numactl --interleave=0 --physcpubind=7 ${benchmarkAddr}/jacobi7 >${benchmark[7]}.log &"
 
 ###############################################################################
 ###############################################################################
@@ -100,8 +103,8 @@ done
 echo
 
 
-rm -f inspector.class
-javac inspector.java
+#rm -f inspector.class
+#javac inspector.java
 
 
 echo "*************************************"
@@ -112,17 +115,10 @@ java inspector $swapSize $migQuanta $schedActivate $layout 8 ${pid[0]} ${pid[1]}
 
 
 #Clean UP
-sudo pkill needle  
-sudo pkill kmeans  
-sudo pkill gups  
-sudo pkill jacobi
+pkill jacobi
 sleep 1
-ps aux | grep needle
-ps aux | grep kmeans
-ps aux | grep gups
 ps aux | grep jacobi
 
 storeLogs
-#sudo pkill needle; sudo pkill kmeans  ;sudo pkill gups  ;  sudo pkill jacobi
 
 

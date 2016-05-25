@@ -1,30 +1,34 @@
 JFLAGS = -g
 JC = javac
 JVM= java
-#FILE=
+JAVA_FILES := $(wildcard src/*.java)
+#OBJ_FILES := $(addprefix classes/,$(notdir $(JAVA_FILES:.cpp=.class)))
+
 
 .SUFFIXES: .java .class
 
-.java.class:
-	$(JC) $(JFLAGS) $*.java
-
 SRCDIR = ./src
+CLASSESDIR = ./classes
 
-CLASSES = \
-$(SRCDIR)/inspector.java \
-$(SRCDIR)/perf.java \
-$(SRCDIR)/supervisor.java \
-$(SRCDIR)/Program.java \
-$(SRCDIR)/Core.java 
 
-MAIN = inspector
+#all: $(JAVA_FILES)
+#	$(JC) $(JFLAGS) -o $@ $^
 
-default: classes
+#classes/%.class: src/%.java
+#	$(JC) $(JFLAGS) -o $@ $<
 
-classes: $(CLASSES:.java=.class)
+all: $(FILES)
+	$(JC) $(JFLAGS) $(JAVA_FILES) 
 
-run: $(MAIN).class
-	$(JVM) $(MAIN)
+#@mkdir -p $(CLASSESDIR)
+#@cp $(SRCDIR)/cores.layout $(CLASSESDIR)/cores.layout
+#$(JC) $(JFLAGS) $(FILES) -d $(CLASSESDIR)
+	
+
+MAIN= inspector
+
+run:
+	cd $(SRCDIR) ; ./jacobi.sh 8 500 0 1 jacobi ; cd .. 	
 
 clean:
-	$(RM) *.class
+	$(RM) -f $(SRCDIR)/*.class
